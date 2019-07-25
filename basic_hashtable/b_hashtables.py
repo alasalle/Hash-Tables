@@ -25,11 +25,12 @@ class BasicHashTable:
 # Research and implement the djb2 hash function
 # '''
 def hash(string, max):
-    
+
     hash = 5381
     a = 33
     for i in string:
         hash = (hash * a) + ord(i)
+
     return hash % max - 1
 
 
@@ -39,7 +40,14 @@ def hash(string, max):
 # If you are overwriting a value with a different key, print a warning.
 # '''
 def hash_table_insert(hash_table, key, value):
-    pass
+    index = hash(key, hash_table.capacity)
+
+    if hash_table.pairs[index] != None:
+        print(f"FYI: You've just overwritten {hash_table.pairs[index]} with {value}.")
+        hash_table.count -= 1
+
+    hash_table.pairs[index] = Pair(key, value)
+    hash_table.count += 1
 
 
 # '''
