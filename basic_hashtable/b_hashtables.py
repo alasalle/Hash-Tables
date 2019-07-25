@@ -16,7 +16,7 @@ class Pair:
 class BasicHashTable:
     def __init__(self, capacity):
         self.capacity = capacity
-        self.pairs = [None] * capacity
+        self.storage = [None] * capacity
 
 
 # '''
@@ -42,10 +42,10 @@ def hash_table_insert(hash_table, key, value):
 
     index = hash(key, hash_table.capacity)
 
-    if hash_table.pairs[index] != None:
-        print(f"FYI: You've just overwritten {hash_table.pairs[index]} with {value}.")
+    if hash_table.storage[index] != None:
+        print(f"FYI: You've just overwritten {hash_table.storage[index]} with {value}.")
 
-    hash_table.pairs[index] = Pair(key, value)
+    hash_table.storage[index] = Pair(key, value)
 
 
 # '''
@@ -57,11 +57,11 @@ def hash_table_remove(hash_table, key):
 
     index = hash(key, hash_table.capacity)
 
-    if hash_table.pairs[index] == None:
+    if hash_table.storage[index] == None:
         print(f"Warning: key {key} is not in this table.")
 
     else:
-        hash_table.pairs[index] = None
+        hash_table.storage[index] = None
 
 
 # '''
@@ -70,7 +70,13 @@ def hash_table_remove(hash_table, key):
 # Should return None if the key is not found.
 # '''
 def hash_table_retrieve(hash_table, key):
-    pass
+
+    index = hash(key, hash_table.capacity)
+
+    if hash_table.storage[index] == None:
+        return None
+
+    return hash_table.storage[index].value
 
 
 def Testing():
