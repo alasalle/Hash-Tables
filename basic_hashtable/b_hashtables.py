@@ -16,7 +16,6 @@ class Pair:
 class BasicHashTable:
     def __init__(self, capacity):
         self.capacity = capacity
-        self.count = 0
         self.pairs = [None] * capacity
 
 
@@ -40,14 +39,13 @@ def hash(string, max):
 # If you are overwriting a value with a different key, print a warning.
 # '''
 def hash_table_insert(hash_table, key, value):
+
     index = hash(key, hash_table.capacity)
 
     if hash_table.pairs[index] != None:
         print(f"FYI: You've just overwritten {hash_table.pairs[index]} with {value}.")
-        hash_table.count -= 1
 
     hash_table.pairs[index] = Pair(key, value)
-    hash_table.count += 1
 
 
 # '''
@@ -56,7 +54,14 @@ def hash_table_insert(hash_table, key, value):
 # If you try to remove a value that isn't there, print a warning.
 # '''
 def hash_table_remove(hash_table, key):
-    pass
+
+    index = hash(key, hash_table.capacity)
+
+    if hash_table.pairs[index] == None:
+        print(f"Warning: key {key} is not in this table.")
+
+    else:
+        hash_table.pairs[index] = None
 
 
 # '''
