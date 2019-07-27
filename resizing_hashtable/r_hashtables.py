@@ -2,10 +2,11 @@
 # Linked List hash table key/value pair
 # '''
 class LinkedPair:
-    def __init__(self, key, value):
+    def __init__(self, key, value, nex, prev):
         self.key = key
         self.value = value
-        self.next = None
+        self.next = nex
+        self.prev = prev
 
 
 # '''
@@ -40,16 +41,17 @@ def hash(string, max):
 # '''
 def hash_table_insert(hash_table, key, value):
     index = hash(key, hash_table.capacity)
-
+    hash_table.count += 1
     current_pair = hash_table.storage[index]
+    last_pair = None
     
     while current_pair and current_pair.key != key:
+        last_pair = current_pair.prev
         current_pair = current_pair.next
 
     if current_pair is None:
-        new_pair = LinkedPair(key, value)
-        new_pair.next = hash_table.storage[index]
-        hash_table.storage[index] = new_pair
+        new_pair = LinkedPair(key, value, current_pair, last_pair)
+        current_pair = new_pair
 
     else:
         current_pair.value = value
@@ -64,7 +66,18 @@ def hash_table_insert(hash_table, key, value):
 # If you try to remove a value that isn't there, print a warning.
 # '''
 def hash_table_remove(hash_table, key):
-    pass
+    index = hash(key, hash_table.capacity)
+    hash_table -= 1
+    current_pair = hash_table.storage[index]
+
+    if hash_table.storage[index] == None:
+        print(f"Warning: key {key} is not in this table.")
+
+    while current_pair:
+        if current_pair.key == key:
+            current_pair.prev.next = current_pair.next
+            current_pair.next.prev = current_pair.prev
+
 
 
 # '''
