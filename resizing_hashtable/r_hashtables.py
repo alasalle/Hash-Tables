@@ -41,18 +41,18 @@ def hash(string, max):
 def hash_table_insert(hash_table, key, value):
     index = hash(key, hash_table.capacity)
 
-    current_list = hash_table.storage[index]
+    current_pair = hash_table.storage[index]
     
-    while current_list.head and current_list.head.key != key:
-        current_list.head = current_list.head.next
+    while current_pair and current_pair.key != key:
+        current_pair = current_pair.next
 
-    if current_list.head is None:
-        current_list.add_to_head(value, key)
+    if current_pair is None:
+        new_pair = LinkedPair(key, value)
+        new_pair.next = hash_table.storage[index]
+        hash_table.storage[index] = new_pair
 
     else:
-        current_list.find_and_replace(value, key)
-
-     
+        current_pair.value = value
 
 
 
