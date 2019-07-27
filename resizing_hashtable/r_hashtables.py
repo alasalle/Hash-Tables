@@ -34,7 +34,7 @@ def hash(string, m):
     for i in string:
         h = (h * a) + ord(i)
 
-    return h % m - 1
+    return h % m
 
 
 # '''
@@ -114,7 +114,7 @@ def hash_table_retrieve(hash_table, key):
 
     if current_pair is None:
         return None
-    
+
     else:
         return current_pair.value
 
@@ -127,10 +127,17 @@ def hash_table_retrieve(hash_table, key):
 # Fill this in
 # '''
 def hash_table_resize(hash_table):
-    ht = HashTable(hash_table.capacity * 2)
+    new_capacity = hash_table.capacity * 2
+    ht = HashTable(new_capacity)
 
     for i in range(0, hash_table.capacity):
-        ht.storage[i] = hash_table.storage[i]
+        hash_table_insert(ht, hash_table.storage[i].key, hash_table.storage[i].value)
+        if hash_table.storage[i].next is not None:
+            hash_table_insert(ht, hash_table.storage[i].next.key, hash_table.storage[i].next.value)
+        
+    for i in range(ht.capacity):
+        print(f"index: {hash(ht.storage[i].key, ht.capacity) if ht.storage[i] is not None else ht.storage[i]}, stor: {ht.storage[i]}")
+
     return ht
 
 
@@ -148,26 +155,13 @@ def Testing():
     hash_table_insert(ht, "key-8", "val-8")
     hash_table_insert(ht, "key-9", "val-9")
 
-    for i in ht.storage:
-        print(i)
+    hash_table_resize(ht)
 
-    hash_table_remove(ht, "key-9")
-    hash_table_remove(ht, "key-8")
-    hash_table_remove(ht, "key-7")
-    hash_table_remove(ht, "key-6")
-    hash_table_remove(ht, "key-5")
-    hash_table_remove(ht, "key-4")
-    hash_table_remove(ht, "key-3")
-    hash_table_remove(ht, "key-2")
-    hash_table_remove(ht, "key-1")
-    hash_table_remove(ht, "key-0")
 
     hash_table_retrieve(ht, "key-0")
     hash_table_retrieve(ht, "key-1")
     hash_table_retrieve(ht, "key-2")
 
-    for i in ht.storage:
-        print(f"2ND: {i}")
 
 
-Testing()
+# Testing()
