@@ -6,6 +6,10 @@ class LinkedPair:
         self.key = key
         self.value = value
         self.next = None
+        self.prev = None
+
+    def __str__(self):
+        return f"key: {self.key}, value: {self.value}, next: {self.next}"
 
 
 # '''
@@ -41,13 +45,13 @@ def hash(string, m):
 def hash_table_insert(hash_table, key, value):
     index = hash(key, hash_table.capacity)
 
-    hash_table.count += 1
     current_pair = hash_table.storage[index]
     
     while current_pair and current_pair.key != key:
         current_pair = current_pair.next
 
     if current_pair is None:
+        hash_table.count += 1
         new_pair = LinkedPair(key, value)
         new_pair.next = hash_table.storage[index]
         hash_table.storage[index] = new_pair
@@ -68,19 +72,31 @@ def hash_table_insert(hash_table, key, value):
 # '''
 def hash_table_remove(hash_table, key):
     index = hash(key, hash_table.capacity)
-    hash_table -= 1
-    current_pair = hash_table.storage[index]
+    first = hash_table.storage[index]
+    current_pair = first
 
-    if hash_table.storage[index] == None:
-        print("Warning")
+    if (current_pair is not None):
 
-    while current_pair:
-        if current_pair.key == key:
-            current_pair.prev.next = current_pair.next
-            current_pair.next.prev = current_pair.prev
+        if (current_pair.key == key):
+
+            hash_table.storage[index] = None
             return
-    return
 
+    while(current_pair is not None):
+
+        if current_pair.key == key: 
+            break 
+
+        prev = current_pair
+        current_pair = current_pair.next
+
+    if(current_pair == None):
+
+        return None
+
+    prev.next = current_pair.next 
+
+    current_pair = None
 
 
 # '''
@@ -119,22 +135,39 @@ def hash_table_resize(hash_table):
 
 
 def Testing():
-    ht = HashTable(10)
+    ht = HashTable(8)
 
-    hash_table_insert(ht, "line_1", "Tiny hash table")
-    hash_table_insert(ht, "line_7", "Filled beyond capacity")
-    hash_table_insert(ht, "line_3", "Linked list saves the day!")
+    hash_table_insert(ht, "key-0", "val-0")
+    hash_table_insert(ht, "key-1", "val-1")
+    hash_table_insert(ht, "key-2", "val-2")
+    hash_table_insert(ht, "key-3", "val-3")
+    hash_table_insert(ht, "key-4", "val-4")
+    hash_table_insert(ht, "key-5", "val-5")
+    hash_table_insert(ht, "key-6", "val-6")
+    hash_table_insert(ht, "key-7", "val-7")
+    hash_table_insert(ht, "key-8", "val-8")
+    hash_table_insert(ht, "key-9", "val-9")
 
-    print(hash_table_retrieve(ht, "line_1"))
-    print(hash_table_retrieve(ht, "line_7"))
-    print(hash_table_retrieve(ht, "line_3"))
+    for i in ht.storage:
+        print(i)
 
-    old_capacity = len(ht.storage)
-    ht = hash_table_resize(ht)
-    new_capacity = len(ht.storage)
+    hash_table_remove(ht, "key-9")
+    hash_table_remove(ht, "key-8")
+    hash_table_remove(ht, "key-7")
+    hash_table_remove(ht, "key-6")
+    hash_table_remove(ht, "key-5")
+    hash_table_remove(ht, "key-4")
+    hash_table_remove(ht, "key-3")
+    hash_table_remove(ht, "key-2")
+    hash_table_remove(ht, "key-1")
+    hash_table_remove(ht, "key-0")
 
-    print("Resized hash table from " + str(old_capacity)
-          + " to " + str(new_capacity) + ".")
+    hash_table_retrieve(ht, "key-0")
+    hash_table_retrieve(ht, "key-1")
+    hash_table_retrieve(ht, "key-2")
+
+    for i in ht.storage:
+        print(f"2ND: {i}")
 
 
 Testing()
