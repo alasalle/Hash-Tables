@@ -41,9 +41,6 @@ def hash(string, m):
 def hash_table_insert(hash_table, key, value):
     index = hash(key, hash_table.capacity)
 
-
-    print(f"index: {index}")
-
     hash_table.count += 1
     current_pair = hash_table.storage[index]
     
@@ -95,12 +92,9 @@ def hash_table_retrieve(hash_table, key):
     index = hash(key, hash_table.capacity)
 
     current_pair = hash_table.storage[index]
-
-    print(f"index: {index}, current: {current_pair}")
     
     while current_pair:
         if current_pair.key == key:
-            print("found")
             return current_pair.value
 
     return None
@@ -114,7 +108,11 @@ def hash_table_retrieve(hash_table, key):
 # Fill this in
 # '''
 def hash_table_resize(hash_table):
-    pass
+    ht = HashTable(hash_table.capacity * 2)
+
+    for i in range(0, hash_table.capacity):
+        ht.storage[i] = hash_table.storage[i]
+    return ht
 
 
 def Testing():
@@ -128,12 +126,12 @@ def Testing():
     print(hash_table_retrieve(ht, "line_7"))
     print(hash_table_retrieve(ht, "line_3"))
 
-    # old_capacity = len(ht.storage)
-    # ht = hash_table_resize(ht)
-    # new_capacity = len(ht.storage)
+    old_capacity = len(ht.storage)
+    ht = hash_table_resize(ht)
+    new_capacity = len(ht.storage)
 
-    # print("Resized hash table from " + str(old_capacity)
-    #       + " to " + str(new_capacity) + ".")
+    print("Resized hash table from " + str(old_capacity)
+          + " to " + str(new_capacity) + ".")
 
 
 Testing()
