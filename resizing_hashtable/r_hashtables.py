@@ -2,11 +2,10 @@
 # Linked List hash table key/value pair
 # '''
 class LinkedPair:
-    def __init__(self, key, value, nex, prev):
+    def __init__(self, key, value):
         self.key = key
         self.value = value
-        self.next = nex
-        self.prev = prev
+        self.next = None
 
 
 # '''
@@ -25,13 +24,13 @@ class HashTable:
 # '''
 # Research and implement the djb2 hash function
 # '''
-def hash(string, max):
-    hash = 5381
+def hash(string, m):
+    h = 5381
     a = 33
     for i in string:
-        hash = (hash * a) + ord(i)
+        h = (h * a) + ord(i)
 
-    return hash % max - 1
+    return h % m - 1
 
 
 # '''
@@ -41,20 +40,25 @@ def hash(string, max):
 # '''
 def hash_table_insert(hash_table, key, value):
     index = hash(key, hash_table.capacity)
+
+
+    print(f"index: {index}")
+
     hash_table.count += 1
     current_pair = hash_table.storage[index]
-    last_pair = None
     
     while current_pair and current_pair.key != key:
-        last_pair = current_pair.prev
         current_pair = current_pair.next
 
     if current_pair is None:
-        new_pair = LinkedPair(key, value, current_pair, last_pair)
-        current_pair = new_pair
+        new_pair = LinkedPair(key, value)
+        new_pair.next = hash_table.storage[index]
+        hash_table.storage[index] = new_pair
+        return
 
     else:
         current_pair.value = value
+        return
 
 
 
@@ -72,11 +76,13 @@ def hash_table_remove(hash_table, key):
 
     if hash_table.storage[index] == None:
         print(f"Warning: key {key} is not in this table.")
+        return
 
     while current_pair:
         if current_pair.key == key:
             current_pair.prev.next = current_pair.next
             current_pair.next.prev = current_pair.prev
+            return
 
 
 
@@ -86,7 +92,22 @@ def hash_table_remove(hash_table, key):
 # Should return None if the key is not found.
 # '''
 def hash_table_retrieve(hash_table, key):
-    pass
+    index = hash(key, hash_table.capacity)
+
+    current_pair = hash_table.storage[index]
+
+    print(f"index: {index}, current: {current_pair}")
+    
+    while current_pair:
+        if current_pair.key == key:
+            print("found")
+            return current_pair.value
+
+    return None
+
+
+
+
 
 
 # '''
@@ -97,15 +118,15 @@ def hash_table_resize(hash_table):
 
 
 def Testing():
-    ht = HashTable(2)
+    ht = HashTable(10)
 
     hash_table_insert(ht, "line_1", "Tiny hash table")
-    hash_table_insert(ht, "line_2", "Filled beyond capacity")
+    hash_table_insert(ht, "line_7", "Filled beyond capacity")
     hash_table_insert(ht, "line_3", "Linked list saves the day!")
 
-    # print(hash_table_retrieve(ht, "line_1"))
-    # print(hash_table_retrieve(ht, "line_2"))
-    # print(hash_table_retrieve(ht, "line_3"))
+    print(hash_table_retrieve(ht, "line_1"))
+    print(hash_table_retrieve(ht, "line_7"))
+    print(hash_table_retrieve(ht, "line_3"))
 
     # old_capacity = len(ht.storage)
     # ht = hash_table_resize(ht)
